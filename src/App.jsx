@@ -1,10 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Pantalla from "./components/Pantalla";
 import Boton from "./components/Boton";
 
 function App() {
   const [valor, setValor] = useState('');
   const [operacion, setOperacion] = useState('');
+  const [theme, setTheme] = useState(() => {
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      return 'dark';
+    }
+
+    return 'light'
+  })
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.querySelector('html').classList.add('dark')
+    } else {
+      document.querySelector('html').classList.remove('dark')
+    }
+  }, [theme])
+
+  const handleSetTheme = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light')
+  }
 
   const teclear = (valor) => {
     if (operacion.length >= 10) return
@@ -30,8 +49,14 @@ function App() {
   }
 
   return (
-    <div className="flex items-center justify-center h-screen font-mono">
-      <div className="bg-slate-700 p-3 rounded-md">
+    <div className="flex items-center flex-col justify-center h-screen font-mono">
+      <button
+        className="mb-5 bg-red-500 hover:bg-red-700 text-white py-2 px-3 rounded-md "
+        onClick={handleSetTheme}
+      >
+        Change Background
+      </button>
+      <div className="bg-slate-700 p-3 rounded-md shadow-lg">
         <Pantalla
           valor={valor}
           operacion={operacion}
